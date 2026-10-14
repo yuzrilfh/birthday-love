@@ -1,22 +1,13 @@
-```javascript
-/* =====================================
-   FLOATING HEARTS
-===================================== */
-
+/* FLOATING HEARTS */
 const hearts = ["♡", "♥", "💙", "✦"];
 
 function createHeart() {
   const heart = document.createElement("div");
-
   heart.className = "heart";
-  heart.textContent =
-    hearts[Math.floor(Math.random() * hearts.length)];
-
+  heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
   heart.style.left = Math.random() * 100 + "vw";
-  heart.style.animationDuration =
-    (5 + Math.random() * 5) + "s";
-  heart.style.fontSize =
-    (12 + Math.random() * 16) + "px";
+  heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+  heart.style.fontSize = (12 + Math.random() * 16) + "px";
 
   document.body.appendChild(heart);
 
@@ -26,53 +17,37 @@ function createHeart() {
 setInterval(createHeart, 900);
 
 
-/* =====================================
-   BACKGROUND MUSIC
-===================================== */
-
+/* MUSIC AND VIDEO */
 const music = document.getElementById("bgMusic");
 const video = document.querySelector(".video-frame video");
-const openButton = document.querySelector('a[href="#memories"]');
+const openButton = document.getElementById("openMemories");
 
-function startMusic() {
+function playMusic() {
   if (!music) return;
 
-  // Jangan mulai musik jika video sedang diputar
+  // Jangan putar musik saat video masih berjalan
   if (video && !video.paused && !video.ended) return;
 
-  music.volume = 1;
-
   music.play().catch((error) => {
-    console.log("Musik belum bisa diputar:", error);
+    console.log("Musik gagal diputar:", error);
   });
 }
 
-// Coba autoplay saat halaman dibuka
-if (music) {
-  music.play().catch(() => {
-    console.log("Menunggu interaksi pengunjung.");
+// Putar musik saat tombol pembuka diklik
+if (openButton && music) {
+  openButton.addEventListener("click", () => {
+    playMusic();
   });
 }
 
-// Mulai musik ketika tombol Open Our Memories ditekan
-if (openButton) {
-  openButton.addEventListener("click", startMusic);
-}
-
-
-/* =====================================
-   VIDEO CONTROLS
-===================================== */
-
+// Pause musik ketika video mulai diputar
 if (music && video) {
-  // Hentikan musik saat video dimulai
   video.addEventListener("play", () => {
     music.pause();
   });
 
-  // Lanjutkan musik setelah video selesai
+  // Lanjutkan musik ketika video selesai
   video.addEventListener("ended", () => {
-    startMusic();
+    playMusic();
   });
 }
-```
