@@ -37,7 +37,7 @@ const openButton = document.querySelector('a[href="#memories"]');
 function startMusic() {
   if (!music) return;
 
-  // Jangan putar musik selama video sedang berjalan
+  // Jangan mulai musik jika video sedang diputar
   if (video && !video.paused && !video.ended) return;
 
   music.volume = 1;
@@ -47,14 +47,14 @@ function startMusic() {
   });
 }
 
-// Coba autoplay saat website dibuka
+// Coba autoplay saat halaman dibuka
 if (music) {
   music.play().catch(() => {
-    console.log("Menunggu interaksi pengunjung untuk memutar musik.");
+    console.log("Menunggu interaksi pengunjung.");
   });
 }
 
-// Mulai musik saat tombol Open Our Memories ditekan
+// Mulai musik ketika tombol Open Our Memories ditekan
 if (openButton) {
   openButton.addEventListener("click", startMusic);
 }
@@ -65,12 +65,12 @@ if (openButton) {
 ===================================== */
 
 if (music && video) {
-  // Hentikan musik ketika video mulai diputar
+  // Hentikan musik saat video dimulai
   video.addEventListener("play", () => {
     music.pause();
   });
 
-  // Lanjutkan musik ketika video selesai
+  // Lanjutkan musik setelah video selesai
   video.addEventListener("ended", () => {
     startMusic();
   });
