@@ -27,43 +27,52 @@ setInterval(createHeart, 900);
 
 
 /* =====================================
-   MUSIC AND VIDEO
+   BACKGROUND MUSIC
 ===================================== */
 
 const music = document.getElementById("bgMusic");
 const video = document.querySelector(".video-frame video");
+const openButton = document.querySelector('a[href="#memories"]');
 
-// Mulai musik saat Open My Love ditekan
-function startBackgroundMusic() {
+function startMusic() {
   if (!music) return;
 
+  // Jangan putar musik selama video sedang berjalan
   if (video && !video.paused && !video.ended) return;
 
   music.volume = 1;
+
   music.play().catch((error) => {
-    console.log("Musik gagal diputar:", error);
+    console.log("Musik belum bisa diputar:", error);
   });
 }
 
-// Cari tombol Open My Love
-const openButton = [...document.querySelectorAll("button, a")]
-  .find((element) =>
-    element.textContent.trim().toLowerCase().includes("open my love")
-  );
-
-if (openButton) {
-  openButton.addEventListener("click", startBackgroundMusic);
+// Coba autoplay saat website dibuka
+if (music) {
+  music.play().catch(() => {
+    console.log("Menunggu interaksi pengunjung untuk memutar musik.");
+  });
 }
 
-// Hentikan musik ketika video mulai
+// Mulai musik saat tombol Open Our Memories ditekan
+if (openButton) {
+  openButton.addEventListener("click", startMusic);
+}
+
+
+/* =====================================
+   VIDEO CONTROLS
+===================================== */
+
 if (music && video) {
+  // Hentikan musik ketika video mulai diputar
   video.addEventListener("play", () => {
     music.pause();
   });
 
-  // Lanjutkan musik setelah video selesai
+  // Lanjutkan musik ketika video selesai
   video.addEventListener("ended", () => {
-    startBackgroundMusic();
+    startMusic();
   });
 }
 ```
