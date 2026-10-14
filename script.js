@@ -20,72 +20,50 @@ function createHeart() {
 
   document.body.appendChild(heart);
 
-  setTimeout(() => {
-    heart.remove();
-  }, 10000);
+  setTimeout(() => heart.remove(), 10000);
 }
 
 setInterval(createHeart, 900);
 
 
 /* =====================================
-   BACKGROUND MUSIC
+   MUSIC AND VIDEO
 ===================================== */
 
 const music = document.getElementById("bgMusic");
 const video = document.querySelector(".video-frame video");
 
-if (music) {
-  music.volume = 1;
+// Mulai musik saat Open My Love ditekan
+function startBackgroundMusic() {
+  if (!music) return;
 
-  // Coba memutar musik saat website dibuka
-  music.play().catch(() => {
-    console.log(
-      "Autoplay diblokir browser. Musik menunggu interaksi pengguna."
-    );
+  if (video && !video.paused && !video.ended) return;
+
+  music.volume = 1;
+  music.play().catch((error) => {
+    console.log("Musik gagal diputar:", error);
   });
 }
 
+// Cari tombol Open My Love
+const openButton = [...document.querySelectorAll("button, a")]
+  .find((element) =>
+    element.textContent.trim().toLowerCase().includes("open my love")
+  );
 
-/* =====================================
-   MUSIC AND VIDEO CONTROL
-===================================== */
+if (openButton) {
+  openButton.addEventListener("click", startBackgroundMusic);
+}
 
+// Hentikan musik ketika video mulai
 if (music && video) {
-
-  // Hentikan musik ketika video mulai diputar
   video.addEventListener("play", () => {
     music.pause();
   });
 
-  // Lanjutkan musik ketika video selesai
+  // Lanjutkan musik setelah video selesai
   video.addEventListener("ended", () => {
-    music.play().catch(() => {
-      console.log("Silakan putar musik secara manual.");
-    });
-  });
-}
-
-
-/* =====================================
-   START MUSIC AFTER USER INTERACTION
-===================================== */
-
-if (music) {
-  const startMusic = () => {
-    // Jangan mulai musik jika video sedang diputar
-    if (video && !video.paused && !video.ended) {
-      return;
-    }
-
-    music.play().catch(() => {});
-  };
-
-  // Interaksi pertama pengunjung dapat mengaktifkan musik
-  document.addEventListener("click", startMusic, { once: true });
-  document.addEventListener("touchstart", startMusic, {
-    once: true,
-    passive: true
+    startBackgroundMusic();
   });
 }
 ```
