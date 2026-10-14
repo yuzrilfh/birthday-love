@@ -1,5 +1,8 @@
 ```javascript
-/* FLOATING HEARTS */
+/* =====================================
+   FLOATING HEARTS
+===================================== */
+
 const hearts = ["♡", "♥", "💙", "✦"];
 
 function createHeart() {
@@ -25,32 +28,64 @@ function createHeart() {
 setInterval(createHeart, 900);
 
 
-/* BACKGROUND MUSIC */
+/* =====================================
+   BACKGROUND MUSIC
+===================================== */
+
 const music = document.getElementById("bgMusic");
 const video = document.querySelector(".video-frame video");
 
 if (music) {
   music.volume = 1;
 
-  // Coba putar musik saat website dibuka
+  // Coba memutar musik saat website dibuka
   music.play().catch(() => {
-    console.log("Autoplay diblokir browser.");
+    console.log(
+      "Autoplay diblokir browser. Musik menunggu interaksi pengguna."
+    );
   });
 }
 
 
-/* VIDEO CONTROLS */
+/* =====================================
+   MUSIC AND VIDEO CONTROL
+===================================== */
+
 if (music && video) {
-  // Musik berhenti saat video mulai
+
+  // Hentikan musik ketika video mulai diputar
   video.addEventListener("play", () => {
     music.pause();
   });
 
-  // Musik lanjut saat video selesai
+  // Lanjutkan musik ketika video selesai
   video.addEventListener("ended", () => {
     music.play().catch(() => {
-      console.log("Musik perlu diputar manual.");
+      console.log("Silakan putar musik secara manual.");
     });
+  });
+}
+
+
+/* =====================================
+   START MUSIC AFTER USER INTERACTION
+===================================== */
+
+if (music) {
+  const startMusic = () => {
+    // Jangan mulai musik jika video sedang diputar
+    if (video && !video.paused && !video.ended) {
+      return;
+    }
+
+    music.play().catch(() => {});
+  };
+
+  // Interaksi pertama pengunjung dapat mengaktifkan musik
+  document.addEventListener("click", startMusic, { once: true });
+  document.addEventListener("touchstart", startMusic, {
+    once: true,
+    passive: true
   });
 }
 ```
