@@ -1,5 +1,6 @@
-// Floating hearts
-const hearts = ["♡", "♥", "❤", "✦"];
+
+ // Floating hearts
+const hearts = ["♡", "♥", "💙", "✦"];
 
 function createHeart() {
   const heart = document.createElement("div");
@@ -15,12 +16,28 @@ function createHeart() {
 
 setInterval(createHeart, 900);
 
-// Smooth music experience: clicking the hero button doesn't autoplay,
-// because browsers generally block autoplay with sound.
-const music = document.getElementById("music");
+// Background music
+const music = document.getElementById("bgMusic");
+const video = document.querySelector("video");
 
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden && !music.paused) {
+// Pause music when video starts
+if (music && video) {
+  video.addEventListener("play", () => {
     music.pause();
-  }
-});
+  });
+
+  // Resume music when video ends
+  video.addEventListener("ended", () => {
+    music.play().catch(() => {
+      console.log("Browser meminta interaksi untuk memutar musik.");
+    });
+  });
+}
+
+// Try autoplay when the page opens
+if (music) {
+  music.volume = 1;
+  music.play().catch(() => {
+    console.log("Autoplay diblokir browser.");
+  });
+}
